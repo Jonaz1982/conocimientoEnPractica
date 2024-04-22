@@ -1,0 +1,38 @@
+trigger:
+  branches:
+    include:
+    - master
+
+pool:
+  vmImage: 'Azure Pipelines'
+
+steps:
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Imprime Hola Mundo 10 veces en pantalla con un job paralelo
+      1..10 | ForEach-Object {
+          Start-Job -ScriptBlock {
+              Write-Output "Hola Mundo"
+          }
+      }
+      # Esperar a que todos los trabajos paralelos terminen
+      While (Get-Job -State "Running") {
+          Start-Sleep -Seconds 1
+      }
+      # Obtener los resultados de los trabajos
+      $results = Receive-Job -State Completed
+      Write-Output $results
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Script que crea 10 archivos con la fecha y luego lo imprime en consola
+      1..10 | ForEach-Object {
+          $date = Get-Date -Format "yyyyMMdd_HHmmss"
+          $fileName = "archivo_$date.txt"
+          New-Item -Path $(Build.ArtifactStagingDirectory) -Name $fileName -ItemType File
+          Write-Output "Se ha creado el archivo $fileName"
+      }

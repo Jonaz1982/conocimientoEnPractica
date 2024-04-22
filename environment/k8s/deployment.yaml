@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-angular-deployment
+  namespace: test-angular
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: test-angular
+  template:
+    metadata:
+      labels:
+        app: test-angular
+    spec:
+      containers:
+      - name: test-angular-container
+        image: version1
+        ports:
+        - containerPort: 80

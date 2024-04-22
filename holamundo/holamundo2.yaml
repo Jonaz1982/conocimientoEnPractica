@@ -1,0 +1,43 @@
+pool:
+  name: My_agent_pool
+  
+trigger: none
+
+
+stages:
+  - stage: TestApp
+    displayName: Test App
+    jobs:
+      - job: jobTestApp
+        displayName: Test App
+        timeoutInMinutes: 35  
+        steps:            
+          - task: PowerShell@2
+            displayName: 'Imprimir 10 mensajes'
+            inputs:
+              targetType: 'inline'
+              script: |
+                $idx = 1
+                for ($idx -le 10) {
+                  Write-Output "Hola Mundo"
+                  if ($idx -gt 9) {
+                    break
+                  } 
+                  $idx++
+                }
+
+          - task: PowerShell@2
+            displayName: 'Imprimir 10 archivos'
+            inputs:
+              targetType: 'inline'
+              script: |
+                $idx = 1
+                for ($idx -le 10) {
+                  $fecha = Get-Date -Format "yyyyMMdd_HHmmss"
+                  Write-Output "Archivo creado: $nombreArchivo"
+                  
+                  if ($idx -gt 9) {
+                    break
+                  } 
+                  $idx++
+                }
